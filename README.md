@@ -11,5 +11,5 @@
 * Virtualbox 	version	7.0.10
 
 # How to run
-1. Clone the repository
+1. Clone the branch "vagrantfile"
 2. run `vagrant up`  
