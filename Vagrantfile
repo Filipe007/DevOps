@@ -20,6 +20,11 @@ SCRIPT
 $frontend_script = <<-'SCRIPT'
 echo "CLONE THE PROJECT..."
 git clone https://github.com/BlueCode23/DevOPs
+echo "INSTALL NPM..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+perl -i -p0e 's/# If not running interactively,[^#]*//se' ~/.bashrc
+source ~/.bashrc
+nvm install v15.14.0
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -32,7 +37,7 @@ Vagrant.configure("2") do |config|
       end
 
   config.vm.define "backend",  primary: true do |backend|
-	backend.vm.provision "shell", inline: $backend_script , run: 'always'
+	#backend.vm.provision "shell", inline: $backend_script , run: 'always'
   end
   config.vm.define  "frontend" do |frontend|
 	frontend.vm.provision "shell", inline: $frontend_script , run: 'always'
