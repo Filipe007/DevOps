@@ -26,6 +26,8 @@ sudo unzip -d /opt/gradle /tmp/gradle-6.7.1-bin.zip
 export GRADLE_HOME=/opt/gradle/gradle-6.7.1
 export PATH=${GRADLE_HOME}/bin:${PATH}
 gradle --version
+sudo chmod -R 777 /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/.gradle
+gradle wrapper
 echo "end of script"
 SCRIPT
 
@@ -34,9 +36,21 @@ echo "CLONE THE PROJECT..."
 git clone https://github.com/BlueCode23/DevOPs
 echo "INSTALL NPM..."
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# Ensure NVM is available in non-interactive shell
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.profile
+echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.profile
+echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> ~/.profile
 perl -i -p0e 's/# If not running interactively,[^#]*//se' ~/.bashrc
+# Apply changes to the current shell session
 source ~/.bashrc
 nvm install v15.14.0
+nvm alias default v15.14.0
+nvm use default
+echo "APPEND TO .env..."
+cd ~/DevOPs/lu.uni.e4l.platform.frontend.dev
+echo "API_URL=http://localhost:8080/e4lapi" >> .env
+echo "INSTALL AND START FRONTEND..."
+npm i && npm start
 SCRIPT
 
 Vagrant.configure("2") do |config|
