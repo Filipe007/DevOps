@@ -26,6 +26,8 @@ sudo unzip -d /opt/gradle /tmp/gradle-6.7.1-bin.zip
 export GRADLE_HOME=/opt/gradle/gradle-6.7.1
 export PATH=${GRADLE_HOME}/bin:${PATH}
 gradle --version
+sudo chmod -R 777 /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/.gradle
+gradle wrapper
 echo "end of script"
 SCRIPT
 
