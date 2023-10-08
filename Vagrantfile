@@ -28,6 +28,14 @@ export PATH=${GRADLE_HOME}/bin:${PATH}
 gradle --version
 sudo chmod -R 777 /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/.gradle
 gradle wrapper
+chmod +x /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew
+#those are not working for now, because of permission denied
+#how to fix clean and build : modify build.gradle to include a line "apply:plugin'base'" after the other plugins
+/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew clean
+/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew build
+#does not work in manual or automated execution yet
+/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew bootRun
+
 echo "end of script"
 SCRIPT
 
