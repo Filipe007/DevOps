@@ -3,7 +3,6 @@ echo "CLONE THE PROJECT..."
 cd /home/vagrant
 git clone https://github.com/BlueCode23/DevOPs
 echo "INSTALL MYSQL..."
-
 export DEBIAN_FRONTEND="noninteractive";
 sudo apt-get update
 sudo apt-get install -y debconf-utils vim curl
@@ -11,8 +10,6 @@ sudo debconf-set-selections <<< 'mysql-apt-config mysql-apt-config/select-server
 wget https://dev.mysql.com/get/mysql-apt-config_0.8.14-1_all.deb
 sudo -E dpkg -i mysql-apt-config_0.8.10-1_all.deb
 sudo apt-get update
-
-# Install MySQL 8
 echo "Installing MySQL 8..."
 sudo debconf-set-selections <<< 'mysql-community-server mysql-community-server/re-root-pass password root'
 sudo debconf-set-selections <<< 'myvsql-community-server mysql-community-server/root-pass password root'
