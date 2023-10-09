@@ -27,15 +27,19 @@ export GRADLE_HOME=/opt/gradle/gradle-6.7.1
 export PATH=${GRADLE_HOME}/bin:${PATH}
 gradle --version
 sudo chmod -R 777 /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/.gradle
-gradle wrapper
-chmod +x /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew
+mysql -u root -p"root" -e "CREATE DATABASE e4l;"
+# Update the root user password
+mysql -u root -p"root" -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '12345678';"
 #those are not working for now, because of permission denied
 #how to fix clean and build : modify build.gradle to include a line "apply:plugin'base'" after the other plugins
-/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew clean
-/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew build
+sudo su
+cd /home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev
+export GRADLE_HOME=/opt/gradle/gradle-6.7.1
+export PATH=${GRADLE_HOME}/bin:${PATH}
+gradle clean
+gradle build
 #does not work in manual or automated execution yet
-/home/vagrant/DevOPs/lu.uni.e4l.platform.api.dev/lu.uni.e4l.platform.api.dev/gradlew bootRun
-
+gradle bootRun &
 echo "end of script"
 SCRIPT
 
