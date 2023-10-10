@@ -71,6 +71,7 @@ echo "INSTALL FRONTEND..."
 rm -rf node_modules
 #sudo sed -i 's\"main": "index.js"\"main": "src/js/index.js"\g' package.json
 npm i package
+npm rebuild node-sass
 mkdir node_modules/node-sass/vendor
 echo "RUN FRONTEND ... "
 npm start
@@ -84,11 +85,16 @@ Vagrant.configure("2") do |config|
         vb.cpus = 4
         vb.gui = false
       end
-
   config.vm.define "backend",  primary: true do |backend|
 	backend.vm.provision "shell", inline: $backend_script , run: 'always'
   end
   config.vm.define  "frontend" do |frontend|
+	frontend.vm.network "forwarded_port", guest: 8080, host: 8080
+	frontend.vm.network "forwarded_port", guest: 8081, host: 8081
+	frontend.vm.network "forwarded_port", guest: 8082, host: 8082
+	frontend.vm.network "forwarded_port", guest: 8083, host: 8083
+	frontend.vm.network "forwarded_port", guest: 8084, host: 8084
+	frontend.vm.network "forwarded_port", guest: 8085, host: 8085
 	frontend.vm.provision "shell", inline: $frontend_script , run: 'always'
   end
   config.vm.synced_folder ".","/vagrant", disabled: true
