@@ -65,8 +65,6 @@ nvm alias default v15.14.0
 nvm use default
 echo "APPEND TO .env..."
 cd /home/vagrant/DevOPs/lu.uni.e4l.platform.frontend.dev/lu.uni.e4l.platform.frontend.dev
-export API_URL=http://localhost:8080/e4lapi
-echo "API_URL=http://localhost:8080/e4lapi" >> .env
 echo "INSTALL FRONTEND..."
 rm -rf node_modules
 #sudo sed -i 's\"main": "index.js"\"main": "src/js/index.js"\g' package.json
@@ -74,6 +72,9 @@ npm i package
 npm rebuild node-sass
 mkdir node_modules/node-sass/vendor
 echo "RUN FRONTEND ... "
+sed -i "s\\#API_URL=http://localhost:8080/e4lapi\API_URL=http://192.168.56.0:8080/e4lapi\g" .env
+sed -i "s\API_URL=http://192.168.33.94:8080/e4lapi\\#API_URL=http://192.168.33.94:8080/e4lapi\g" .env
+sed -i 's/devServer: {/devServer: {headers:{"Access-Control-Allow-Origin":"192.168.33.98","Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS","Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"},/g' webpack.config.js
 npm start
 SCRIPT
 
@@ -86,6 +87,7 @@ Vagrant.configure("2") do |config|
         vb.gui = false
       end
   config.vm.define "backend",  primary: true do |backend|
+	backend.vm.network "private_network", ip: "192.168.56.0"
 	backend.vm.provision "shell", inline: $backend_script , run: 'always'
   end
   config.vm.define  "frontend" do |frontend|
