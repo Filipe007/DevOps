@@ -74,7 +74,8 @@ mkdir node_modules/node-sass/vendor
 echo "RUN FRONTEND ... "
 sed -i "s\\#API_URL=http://localhost:8080/e4lapi\API_URL=http://192.168.56.0:8080/e4lapi\g" .env
 sed -i "s\API_URL=http://192.168.33.94:8080/e4lapi\\#API_URL=http://192.168.33.94:8080/e4lapi\g" .env
-sed -i 's/devServer: {/devServer: {headers:{"Access-Control-Allow-Origin":"192.168.33.98","Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS","Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"},/g' webpack.config.js
+sed -i 's\devServer: {\devServer: {headers:{"Access-Control-Allow-Origin":"192.168.56.0","Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS","Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"},\g' webpack.config.js
+sed -i 's\_index2.default.defaults.baseURL = "http://192.168.33.94:8080/e4lapi";\_index2.default.defaults.baseURL = "http://192.168.56.0:8080/e4lapi";\g' e4l.frontend/web/dist/js
 npm start
 SCRIPT
 

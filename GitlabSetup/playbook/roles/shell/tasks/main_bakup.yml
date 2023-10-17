@@ -1,0 +1,51 @@
+---
+- name: Automating manual steps
+  become: yes  # Use sudo to execute the shell commands
+  tasks:
+    - name: Edit gitlab config
+      shell: |
+        sed -i "s\external_url http://hostname\external_url 'http://192.168.60.0/gitlab'\g" /etc/gitlab/gitlab.rb
+        sed -i "s\# unicorn['port'] = 8080\unicorn['port'] = 8088\g" /etc/gitlab/gitlab.rb
+        sed -i "s\# gitlab_rails['initial_root_password'] = \"password\"\gitlab_rails['initial_root_password'] = \"root\""
+    - name: Restart gitlab
+      shell: |
+        gitlab-ctl reconfigure
+        gitlab-ctl restart unicorn
+        gitlab-ctl restart
+    - name: Create docker username
+      shell: |
+        usermod -aG docker vagrant
+    - name: Generate accesstoken
+      shell: |
+        bash admin_token.sh
+    - name: Generate the repository on github
+      shell: |
+         curl --request POST --header "PRIVATE-TOKEN: $(find . -type f -name 'admin-access-token.txt' -exec cat {} \;)" --data "name=project" "https://192.168.60.0/gitlab/api/v4/projects/users/root"
+    - name: Clone the repo
+      shell: |
+        git clone https://github.com/BlueCode23/DevOPs.git
+    - name: Create the repository
+      shell: |
+        mkdir project
+        rsync -a  Devops/ project/
+        cd project
+        git init
+        echo "bin" >> .gitignore
+        git add .
+        git config --global user.name "vagrant"
+        git commit -m "inital commit"
+        git remote add origin http://192.168.60.0/gitlab/root/project.git`
+
+    - name: Install gitrunner
+      shell: |
+        curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+        sudo apt-get install gitlab-runner
+
+    - name: create the runner
+      shell: |
+        sudo gitlab-runner register --non-interactive --url "http://192.168.60.0/gitlab" --token "$(sudo gitlab-rails runner -e production \"puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token\" --description \"docker\" --tag-list "docker" --executor \"docker\" --docker-image alpine:latest --run-untagged=\"true\""
+
+    - name: create the testcase
+      shell: |
+        cd HelloWorldMaven
+        .gitlab-ci.yml

@@ -1,0 +1,5 @@
+---
+
+- name: Install nmap (not Debian Bullseye)
+  ansible.builtin.package:
+    name: nmap
