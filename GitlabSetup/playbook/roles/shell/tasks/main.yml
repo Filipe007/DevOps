@@ -38,6 +38,7 @@
   shell: |
     mkdir project
     rsync -a  DevOPs/ project/
+    mv .gitlab-ci.yml project/.gitlab-ci.yml
     cd project
     rm -rf .git
     rm -rf .github
