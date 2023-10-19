@@ -27,3 +27,6 @@ body_header=$(curl -L -b cookies.txt "${gitlab_host}/-/profile/personal_access_t
 # 5. Scrape the personal access token from the response HTML
 personal_access_token=$(echo "$body_header" | sed -n 's/.*created-personal-access-token"[[:blank:]]value="\([^"]*\)".*/\1/p')
 echo "$personal_access_token" > admin-access-token.txt
+
+
+

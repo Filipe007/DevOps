@@ -29,21 +29,27 @@
     sudo bash admin_token.sh > outputofadmin
 - name: Generate the repository on github
   shell: |
-    curl  --request POST --header "PRIVATE-TOKEN: $(find  -type f -name 'admin-access-token.txt' -exec cat {} \;)" --header "Content-Type: application/json" --data '{"name": "new_project"}' --url "http://192.168.60.0/gitlab/api/v4/projects/"
+    curl  --request POST --header "PRIVATE-TOKEN: $(find  -type f -name 'admin-access-token.txt' -exec cat {} \;)" --header "Content-Type: application/json" --data '{"name": "project"}' --url "http://192.168.60.0/gitlab/api/v4/projects/"
 - name: Clone the repo
   shell: |
     git clone https://github.com/BlueCode23/DevOPs.git
 - name: Create the repository
+  become: true
   shell: |
     mkdir project
-    rsync -a  Devops/ project/
+    rsync -a  DevOPs/ project/
     cd project
+    rm -rf .git
+    rm -rf .github
     git init
+    git config --global credential.helper store
+    echo "http://root:aaaaaaaa@192.168.60.0" > ~/.git-credentials
     echo "bin" >> .gitignore
     git add .
     git config --global user.name "vagrant"
     git commit -m "inital commit"
     git remote add origin http://192.168.60.0/gitlab/root/project.git
+    git push origin master
 
 - name: Install gitrunner
   become: true
@@ -51,12 +57,10 @@
     curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
     apt-get install gitlab-runner
 
+- name: Get the runners token
+  become: true
+  shell: sudo gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token" > runner_token
 - name: create the runner
   become: true
   shell: |
-    gitlab-runner register --non-interactive --url "http://192.168.60.0/gitlab" --token "$(sudo gitlab-rails runner -e production \"puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token\" --description \"docker\" --tag-list "docker" --executor \"docker\" --docker-image alpine:latest --run-untagged=\"true\""
-
-- name: create the testcase
-  shell: |
-    cd HelloWorldMaven
-    .gitlab-ci.yml
+     sudo gitlab-runner register --non-interactive --url "http://192.168.60.0/gitlab" -r "$(cat runner_token)" --description "docker" --tag-list "docker" --executor "docker" --docker-image "alpine:latest" --run-untagged="true"
