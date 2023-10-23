@@ -1,4 +1,4 @@
-gitlab_host="http://192.168.60.0/gitlab"
+gitlab_host="http://192.168.60.2/gitlab"
 gitlab_user="root"
 gitlab_password="aaaaaaaa"
 
