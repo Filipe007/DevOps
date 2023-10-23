@@ -3,7 +3,7 @@
 - name: Edit gitlab config 1
   become: true
   shell: >
-    sed -i "s\external_url 'http://gitlab.example.com'\external_url 'http://192.168.60.0/gitlab'\g" /etc/gitlab/gitlab.rb
+    sed -i "s\external_url 'http://gitlab.example.com'\external_url 'http://192.168.60.2/gitlab'\g" /etc/gitlab/gitlab.rb
 - name: Edit gitlab config 2
   become: true
   shell: sed -i 's/# unicorn\['\''port'\''\] = 8080/unicorn\['\''port'\''\] = 8088/' /etc/gitlab/gitlab.rb
@@ -29,7 +29,7 @@
     sudo bash admin_token.sh > outputofadmin
 - name: Generate the repository on github
   shell: |
-    curl  --request POST --header "PRIVATE-TOKEN: $(find  -type f -name 'admin-access-token.txt' -exec cat {} \;)" --header "Content-Type: application/json" --data '{"name": "project"}' --url "http://192.168.60.0/gitlab/api/v4/projects/"
+    curl  --request POST --header "PRIVATE-TOKEN: $(find  -type f -name 'admin-access-token.txt' -exec cat {} \;)" --header "Content-Type: application/json" --data '{"name": "project"}' --url "http://192.168.60.2/gitlab/api/v4/projects/"
 - name: Clone the repo
   shell: |
     git clone https://github.com/BlueCode23/DevOPs.git
@@ -44,12 +44,12 @@
     rm -rf .github
     git init
     git config --global credential.helper store
-    echo "http://root:aaaaaaaa@192.168.60.0" > ~/.git-credentials
+    echo "http://root:aaaaaaaa@192.168.60.2" > ~/.git-credentials
     echo "bin" >> .gitignore
     git add .
     git config --global user.name "vagrant"
     git commit -m "inital commit"
-    git remote add origin http://192.168.60.0/gitlab/root/project.git
+    git remote add origin http://192.168.60.2/gitlab/root/project.git
     git push origin master
 
 - name: Install gitrunner
@@ -64,4 +64,4 @@
 - name: create the runner
   become: true
   shell: |
-     sudo gitlab-runner register --non-interactive --url "http://192.168.60.0/gitlab" -r "$(cat runner_token)" --description "docker" --tag-list "docker" --executor "docker" --docker-image "alpine:latest" --run-untagged="true"
+     sudo gitlab-runner register --non-interactive --url "http://192.168.60.2/gitlab" -r "$(cat runner_token)" --description "docker" --tag-list "docker" --executor "docker" --docker-image "alpine:latest" --run-untagged="true"

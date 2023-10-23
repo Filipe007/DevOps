@@ -22,6 +22,10 @@
       ansible.builtin.copy:
           src: roles/shell/tasks/admin_token.sh
           dest: /home/vagrant/admin_token.sh
+    - name: Copy .gitlab-ci.yml in the right repository
+      ansible.builtin.copy:
+          src: roles/shell/tasks/.gitlab-ci.yml
+          dest: /home/vagrant/.gitlab-ci.yml
 
     - include_role:
         name: shell
