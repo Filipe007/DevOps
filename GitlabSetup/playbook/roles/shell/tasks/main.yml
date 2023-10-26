@@ -61,6 +61,7 @@
 - name: Get the runners token
   become: true
   shell: sudo gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token" > runner_token
+  sudo gitlab-runner restart
 - name: create the runner
   become: true
   shell: |
