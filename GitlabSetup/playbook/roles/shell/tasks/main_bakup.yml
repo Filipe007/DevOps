@@ -44,7 +44,7 @@
     - name: create the runner
       shell: |
         sudo gitlab-runner register --non-interactive --url "http://192.168.60.0/gitlab" --token "$(sudo gitlab-rails runner -e production \"puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token\" --description \"docker\" --tag-list "docker" --executor \"docker\" --docker-image alpine:latest --run-untagged=\"true\""
-
+        sudo gitlab-runner restart
     - name: create the testcase
       shell: |
         cd HelloWorldMaven
