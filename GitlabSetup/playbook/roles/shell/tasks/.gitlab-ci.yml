@@ -1,4 +1,6 @@
 image: ubuntu:22.04
+before_script:
+    - apt-get update -qq && apt-get install -y curl
 stages:
   - build
   - test
@@ -14,8 +16,13 @@ build_app:
   tags:
     - integration
   script:
-    - bash scripts/frontend_script.sh
-    - bash scripts/backend_script.sh
+    # TODO: add the correct directory
+    - gradle clean
+    - gradle build
+    # TODO: add the correct directory
+    - npm i package
+    - npm rebuild node-sass
+    - mkdir node_modules/node-sass/vendor
 
 test_app:
   stage: test
