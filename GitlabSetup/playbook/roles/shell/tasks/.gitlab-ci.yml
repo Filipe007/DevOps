@@ -1,4 +1,4 @@
-images: ubuntu:22.04
+image: ubuntu:22.04
 stages:
   - build
   - test
@@ -10,7 +10,7 @@ cache:
     - lu.uni.e4l.platform.frontend.dev/lu.uni.e4l.platform.frontend.dev/nodes_modules
 
 build_app:
-  stake: build
+  stage: build
   tags:
     - integration
   script:
@@ -25,11 +25,10 @@ test_app:
     - bash gradle_test_java.sh
 
 deploy_app:
-  stake: deploy
+  stage: deploy
   tags:
     - integration
   script:
     - echo "$(pwd)"
     - gradle bootRun &
     - npm start
-
